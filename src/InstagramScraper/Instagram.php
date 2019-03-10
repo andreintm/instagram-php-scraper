@@ -561,6 +561,7 @@ class Instagram
             'medias' => $medias,
             'maxId' => $maxId,
             'hasNextPage' => $hasNextPage,
+            'account' => $account,
         ];
 
         $variables = json_encode([
@@ -604,6 +605,7 @@ class Instagram
             'medias' => $medias,
             'maxId' => $maxId,
             'hasNextPage' => $hasNextPage,
+            'account' => $account,
         ];
 
         return $toReturn;
