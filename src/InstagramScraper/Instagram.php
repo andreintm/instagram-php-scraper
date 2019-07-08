@@ -1207,7 +1207,7 @@ class Instagram
     public function getMediaLikes($mediaCode, $count, $after = '')
     {
         if ($count > 50) {
-            echo "Max followers per request is 50";
+            throw new \Exception("Max followers per request is 50", 422);
         }
 
         $responseLikes = [];
