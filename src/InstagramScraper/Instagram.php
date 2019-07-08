@@ -1067,11 +1067,12 @@ class Instagram
      * @param int $count Total followers to retrieve
      * @param int $pageSize Internal page size for pagination
      * @param bool $delayed Use random delay between requests to mimic browser behaviour
+     * @param string $endCursor
      *
      * @return array
      * @throws InstagramException
      */
-    public function getFollowers($accountId, $count = 20, $pageSize = 20, $delayed = true)
+    public function getFollowers($accountId, $count = 20, $pageSize = 20, $delayed = true, $endCursor = '')
     {
         if ($delayed) {
             set_time_limit($this->pagingTimeLimitSec);
@@ -1079,7 +1080,6 @@ class Instagram
 
         $index = 0;
         $accounts = [];
-        $endCursor = '';
 
         if ($count < $pageSize) {
             throw new InstagramException('Count must be greater than or equal to page size.');
@@ -1124,7 +1124,11 @@ class Instagram
                 usleep($microsec);
             }
         }
-        return $accounts;
+
+        return [
+            'accounts' => $accounts,
+            'endCursor' => $endCursor
+        ];
     }
 
     /**
