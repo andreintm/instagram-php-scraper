@@ -31,6 +31,7 @@ class Endpoints
     const UNLIKE_URL = 'https://www.instagram.com/web/likes/{mediaId}/unlike/';
     const ADD_COMMENT_URL = 'https://www.instagram.com/web/comments/{mediaId}/add/';
     const DELETE_COMMENT_URL = 'https://www.instagram.com/web/comments/{mediaId}/delete/{commentId}/';
+    const MEDIA_LIKES_URL = 'https://www.instagram.com/graphql/query/?query_hash=d5d763b1e2acf209d62d22d184488e57&variables={"shortcode":"{{media_code}}","include_reel":true,"first":{{count}},"after":"{{after}}"}';
 
     const ACCOUNT_MEDIAS2 = 'https://www.instagram.com/graphql/query/?query_id=17880160963012870&id={{accountId}}&first=10&after=';
 
@@ -114,6 +115,15 @@ class Endpoints
     public static function getLastLikesByCodeLink($code)
     {
         $url = str_replace('{{code}}', urlencode($code), static::LAST_LIKES_BY_CODE);
+        return $url;
+    }
+
+    public static function getMediaLikes($mediaCode, $count, $after)
+    {
+        $url = str_replace('{{media_code}}', urlencode($mediaCode), static::MEDIA_LIKES_URL);
+        $url = str_replace('{{count}}', urlencode($count), $url);
+        $url = str_replace('{{after}}', urlencode($after), $url);
+
         return $url;
     }
 

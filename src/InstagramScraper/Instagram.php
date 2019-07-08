@@ -1198,6 +1198,43 @@ class Instagram
     }
 
     /**
+     * @param $mediaCode
+     * @param $count
+     * @param string $after
+     * @return array
+     * @throws \InstagramScraper\Exception\InstagramException
+     */
+    public function getMediaLikes($mediaCode, $count, $after = '')
+    {
+        if ($count > 50) {
+            echo "Max followers per request is 50";
+        }
+
+        $responseLikes = [];
+
+        $response = Request::get(Endpoints::getMediaLikes($mediaCode, $count, $after));
+        $this->generateHeaders($this->userSession);
+
+        if ($response->code !== static::HTTP_OK) {
+            throw new InstagramException('Response code is ' . $response->code . '. Body: ' . static::getErrorBody($response->body) . ' Something went wrong. Please report issue.', $response->code);
+        }
+
+        $jsonResponse = $this->decodeRawBodyToJson($response->raw_body);
+
+        $likesUsers = $jsonResponse['data']['shortcode_media']['edge_liked_by']['edges'];
+
+        foreach ($likesUsers as $likeUser) {
+            $responseLikes['likes'][] = $likeUser['node']['username'];
+        }
+
+        $after = $jsonResponse['data']['shortcode_media']['edge_liked_by']['page_info']['has_next_page'] ? $jsonResponse['data']['shortcode_media']['edge_liked_by']['page_info']['end_cursor'] : '';
+
+        $responseLikes['after'] = $after;
+
+        return $responseLikes;
+    }
+
+    /**
      * @param array $reel_ids - array of instagram user ids
      * @return array
      * @throws InstagramException
